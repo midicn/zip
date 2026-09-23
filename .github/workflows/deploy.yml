@@ -1,0 +1,80 @@
+name: Deploy zip site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GITHUB_REPO: midicn/midi-lib
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # 版本单源：与 mid 站同一写法，从数据仓 meta/version.json 读取（不硬编码）
+      - name: "Resolve release tag (single source: meta/version.json)"
+        run: |
+          TAG=$(curl -sL --retry 3 "https://raw.githubusercontent.com/midicn/midi-lib/main/meta/version.json" | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])")
+          if [ -z "$TAG" ]; then echo "::error::version.json 未取到版本号"; exit 1; fi
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=$TAG"
+
+      # 包清单单源：同样从数据仓 meta/ 拉取（由 build_dim_packs.py 产出并提交）
+      - name: Fetch packs manifest
+        run: |
+          mkdir -p meta
+          curl -sL --retry 3 --retry-delay 5 -o meta/packs-manifest.json \
+            "https://raw.githubusercontent.com/midicn/midi-lib/main/meta/packs-manifest.json"
+          python3 - <<'PY'
+          import json, sys
+          m = json.load(open('meta/packs-manifest.json', encoding='utf-8'))
+          packs = m.get('packs') or []
+          if not packs:
+              sys.exit('packs-manifest.json 里没有 packs')
+          print('manifest:', m.get('version'), len(packs), 'packs,',
+                round(sum(p.get('bytes') or 0 for p in packs)/1e9, 2), 'GB')
+          PY
+
+      - name: Generate pack index
+        run: python3 tools/gen_packs_index.py --in meta/packs-manifest.json --out data/packs.json
+
+      - name: Verify index
+        run: |
+          python3 - <<'PY'
+          import json
+          d = json.load(open('data/packs.json', encoding='utf-8'))
+          assert d['packs'] > 0 and d['dims'], 'packs.json 为空'
+          assert len(d['dims']) == 8, f"维度数应为 8，实际 {len(d['dims'])}"
+          print('packs.json OK:', d['packs'], 'packs /', len(d['dims']), 'dims /',
+                f"{d['bytes']/1e9:.2f} GB")
+          for dim in d['dims']:
+              print(f"   {dim['zh']}: {dim['packs']} 包 / {dim['tracks']:,} 首")
+          PY
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

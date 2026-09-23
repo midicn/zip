@@ -1,0 +1,44 @@
+/* zip.midicn.com · 站点专属样式（叠加在 style.css 之上；style.css 为 lib 复制件，勿改这份） */
+
+/* 总览条 */
+.stat{display:flex;flex-wrap:wrap;gap:26px;margin:14px 0 26px}
+.stat > div{min-width:104px}
+.stat b{display:block;font-family:var(--mono);font-size:var(--fs-20);color:var(--paper);line-height:1.25}
+.stat span{font-size:var(--fs-12);color:var(--paper-3)}
+
+/* 维度折叠区 */
+.dimsec{margin:0 0 var(--s5)}
+.dimsec > summary{cursor:pointer;list-style:none;display:flex;gap:12px;align-items:baseline;
+  padding:11px 2px;border-bottom:1px solid var(--rule-2)}
+.dimsec > summary::-webkit-details-marker{display:none}
+.dimsec > summary::before{content:'▸';color:var(--dim);transition:transform .15s;flex:none}
+.dimsec[open] > summary::before{transform:rotate(90deg)}
+.dimsec > summary h2{font-size:var(--fs-16);margin:0}
+.dimsec > summary .spacer{flex:1}
+.dimsec > summary .meta{font-family:var(--mono);font-size:var(--fs-11);color:var(--paper-3);white-space:nowrap}
+
+/* 包列表（每包一行） */
+.plist{margin:0;padding:0;list-style:none}
+.prow{display:flex;gap:12px;align-items:baseline;justify-content:space-between;
+  padding:8px 2px;border-bottom:1px solid var(--rule)}
+.prow:hover{background:var(--ink-2)}
+.pr-main{min-width:0;display:flex;gap:10px;align-items:baseline;flex:1}
+.pr-k{color:var(--paper);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr-k:hover{color:var(--vermilion)}
+.pr-srcs{font-family:var(--mono);font-size:var(--fs-11);color:var(--paper-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.pr-side{flex:none;display:flex;gap:14px;align-items:baseline}
+.pr-n{font-family:var(--mono);font-size:var(--fs-12);color:var(--paper-2);white-space:nowrap}
+.pr-b{font-family:var(--mono);font-size:var(--fs-12);color:var(--paper-3);white-space:nowrap;min-width:70px;text-align:right}
+.pr-dl{color:var(--slate);font-size:var(--fs-13);text-decoration:none;white-space:nowrap}
+.pr-dl:hover{color:var(--vermilion)}
+
+/* 筛选框 */
+.filterbox input{width:100%;max-width:420px;background:var(--ink-2);border:1px solid var(--rule-2);
+  border-radius:var(--r);color:var(--paper);padding:9px 12px;font-size:var(--fs-14)}
+.filterbox input:focus{outline:none;border-color:var(--vermilion)}
+
+@media (max-width:640px){
+  .pr-srcs{display:none}
+  .stat{gap:16px}
+}

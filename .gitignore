@@ -1,0 +1,6 @@
+data/
+meta/
+meta.zip
+__pycache__/
+*.pyc
+.remote_url

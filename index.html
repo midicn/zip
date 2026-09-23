@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>维度包下载 · zip.midicn.com</title>
+<meta name="description" content="midicn-lib 维度包下载：按来源 / 风格 / 时期 / 乐器 / 授权档位 / 曲式 / 地域 / 作曲家 8 个维度切分的 MIDI 子集包，全部为开放许可数据。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230B0B0C'/%3E%3Crect x='14' y='30' width='4' height='14' fill='%23CE4A32'/%3E%3Crect x='24' y='20' width='4' height='24' fill='%23CE4A32'/%3E%3Crect x='34' y='26' width='4' height='18' fill='%23C9A227'/%3E%3Crect x='44' y='16' width='4' height='28' fill='%23C9A227'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header><div class="hbar">
+  <a class="brand" href="./"><svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#0B0B0C"/><rect x="14" y="30" width="4" height="14" fill="#CE4A32"/><rect x="24" y="20" width="4" height="24" fill="#CE4A32"/><rect x="34" y="26" width="4" height="18" fill="#C9A227"/><rect x="44" y="16" width="4" height="28" fill="#C9A227"/></svg><b>midicn-lib</b><i>packs</i></a>
+  <nav class="nav">
+    <a href="https://lib.midicn.com/" data-zh="音乐库" data-en="Library">音乐库</a>
+    <a href="https://mid.midicn.com/" data-zh="维度浏览" data-en="Dimensions">维度浏览</a>
+    <a href="#" class="on" data-zh="维度包下载" data-en="Packs">维度包下载</a>
+    <a href="https://lib.midicn.com/licenses.html" data-zh="许可与法律" data-en="Licence">许可与法律</a>
+  </nav>
+  <button class="iconbtn" id="theme" title="Theme"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36A5.39 5.39 0 0112 3z"/></svg></button>
+  <button class="iconbtn langbtn" id="lang">EN</button>
+</div></header>
+
+<main class="doc wide">
+  <p class="meta" data-zh="档案 · 维度包" data-en="ARCHIVE · DIMENSION PACKS">档案 · 维度包</p>
+  <h1 data-zh="维度包下载" data-en="Dimension packs">维度包下载</h1>
+  <p class="lede" id="lede"></p>
+  <div class="stat" id="stat"></div>
+
+  <div class="note" id="tierNote"></div>
+
+  <!-- 用途包（4 个）：整库按用途打包，入口也在本站（用户决定：包入口统一归 zip 站） -->
+  <div class="stitle"><h2 data-zh="一 · 用途包（整库）" data-en="1 · Usage packs (whole library)">一 · 用途包（整库）</h2></div>
+  <ul class="plist" id="usagePacks"></ul>
+
+  <div class="stitle"><h2 data-zh="二 · 维度包" data-en="2 · Dimension packs">二 · 维度包</h2></div>
+
+  <div class="panel filterbox" style="margin:var(--s3) 0 var(--s5)">
+    <div class="panel-bd">
+      <input id="q" type="search" autocomplete="off"
+             data-ph-zh="筛选包名（如 aria / beethoven / waltz）…"
+             data-ph-en="Filter pack names (e.g. aria / beethoven / waltz)…"
+             placeholder="筛选包名…">
+      <p class="meta" id="hint" style="margin:var(--s3) 0 0"></p>
+    </div>
+  </div>
+
+  <div id="dims"></div>
+
+  <div class="stitle"><h2 data-zh="怎么用" data-en="How to use">怎么用</h2></div>
+  <ol class="steps" id="steps"></ol>
+
+  <div class="stitle"><h2 data-zh="说明" data-en="Notes">说明</h2></div>
+  <div class="panel"><div class="panel-bd" id="about"></div></div>
+</main>
+
+<footer><div class="wrap">
+  <div class="fbar">
+    <b>midicn-lib</b>
+    <nav class="fnav">
+      <a href="https://lib.midicn.com/" data-zh="音乐库" data-en="Library">音乐库</a>
+      <a href="https://mid.midicn.com/" data-zh="维度浏览" data-en="Dimensions">维度浏览</a>
+      <a href="https://lib.midicn.com/download.html" data-zh="数据下载总览" data-en="Download hub">数据下载总览</a>
+      <a href="https://github.com/midicn/midi-lib" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <span class="flic" id="footLic"></span>
+  </div>
+  <div class="fnote"><span id="footNote"></span><span id="footLegal"></span></div>
+</div></footer>
+
+<script>
+const store = {
+  get(k, d){ try{ return localStorage.getItem(k) ?? d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+};
+let LANG = store.get('midicn-lang', null) || 'zh';
+function t(zh, en){ return LANG === 'zh' ? zh : en; }
+const $ = id => document.getElementById(id);
+const fmt = n => (n||0).toLocaleString('en-US');
+function mb(b){ b = b||0; return b >= 1e9 ? (b/1e9).toFixed(2)+' GB' : (b/1e6).toFixed(1)+' MB'; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+const TIERS = {
+  main:  { zh:'C1 · 可商用',   en:'C1 · commercial OK', cls:'c1' },
+  'piano-special': { zh:'C2 · 非商用', en:'C2 · non-commercial', cls:'c2' },
+  study: { zh:'C3 · 仅研究',   en:'C3 · study only',   cls:'c3' },
+};
+
+let DATA = null;
+
+async function fetchJSON(url, tries){
+  for(let i=0;i<(tries||2);i++){
+    try{ const r = await fetch(url, {cache:'no-store'}); if(r.ok) return await r.json(); }catch(e){}
+    if(i < (tries||2)-1) await new Promise(res=>setTimeout(res, 400*(i+1)));
+  }
+  throw new Error('load failed: ' + url);
+}
+
+function applyLang(){
+  document.documentElement.lang = LANG === 'zh' ? 'zh' : 'en';
+  document.querySelectorAll('[data-zh]').forEach(el=>{
+    const v = el.getAttribute('data-' + LANG); if (v != null) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-ph-zh]').forEach(el=>{
+    const v = el.getAttribute('data-ph-' + LANG); if (v != null) el.placeholder = v;
+  });
+  $('lang').textContent = LANG === 'zh' ? 'EN' : '中';
+  if(DATA) render();
+}
+$('lang').onclick = ()=>{ LANG = LANG === 'zh' ? 'en' : 'zh'; store.set('midicn-lang', LANG); applyLang(); };
+
+const themeBtn = $('theme');
+function setTheme(v){ document.documentElement.dataset.theme = v; store.set('midicn-theme', v); }
+setTheme(store.get('midicn-theme', null) || 'dark');
+themeBtn.onclick = ()=> setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+function packURL(p){
+  const base = DATA.base_url || ('https://github.com/midicn/midi-lib/releases/download/' + DATA.release_tag + '/');
+  return base + p.zip;
+}
+
+function rowHTML(p){
+  const n = p.count || 0;
+  const srcs = (p.srcs && p.srcs.length) ? p.srcs.join(' · ') : '';
+  return '<li class="prow"><div class="pr-main">'+
+      '<a class="pr-k" href="'+esc(packURL(p))+'" title="'+esc(p.zip)+'">'+esc(p.key)+'</a>'+
+      (srcs ? '<span class="pr-srcs">'+esc(srcs)+'</span>' : '')+
+    '</div><div class="pr-side">'+
+      '<span class="pr-n">'+fmt(n)+t(' 首',' tracks')+'</span>'+
+      '<span class="pr-b">'+mb(p.bytes)+'</span>'+
+      '<a class="pr-dl" href="'+esc(packURL(p))+'" download>↓</a>'+
+    '</div></li>';
+}
+
+function usageURL(zip){
+  const base = 'https://github.com/midicn/midi-lib/releases/download/' + (DATA.version || '') + '/';
+  return base + zip;
+}
+
+function usageRowHTML(p){
+  return '<li class="prow"><div class="pr-main">'+
+      '<a class="pr-k" href="'+esc(usageURL(p.zip))+'" title="'+esc(p.zip)+'">'+esc(LANG==='zh'?p.zh:p.en)+'</a>'+
+      '<span class="pr-srcs">'+esc(LANG==='zh'?p.descZh:p.descEn)+'</span>'+
+    '</div><div class="pr-side">'+
+      '<span class="pr-n">'+(p.size||'')+'</span>'+
+      '<a class="pr-dl" href="'+esc(usageURL(p.zip))+'" download>↓</a>'+
+    '</div></li>';
+}
+
+function usagePacks(){
+  const v = DATA.version || '';
+  return [
+    { zh:'main.zip', en:'main.zip', zip:'midicn-lib-'+v+'-main.zip', size:'~0.52 GB',
+      descZh:'可商用主库（C1）：古典 / 民谣 / 赞美诗 / 爱尔兰 · 含 C1 全部曲目',
+      descEn:'Commercial-use main library (C1): classical, folk, hymns, Irish' },
+    { zh:'piano-special.zip', en:'piano-special.zip', zip:'midicn-lib-'+v+'-piano-special.zip', size:'~0.35 GB',
+      descZh:'钢琴专项（C2 · 仅非商用）：aria / MAESTRO / EMOPIA',
+      descEn:'Piano special (C2, non-commercial): aria / MAESTRO / EMOPIA' },
+    { zh:'study.zip', en:'study.zip', zip:'midicn-lib-'+v+'-study.zip', size:'~0.09 GB',
+      descZh:'研究学习（C3）：中国民歌集成 · Lakh 过滤子集',
+      descEn:'Study only (C3): Chinese folk anthology, Lakh subset' },
+    { zh:'meta.zip', en:'meta.zip', zip:'midicn-lib-'+v+'-meta.zip', size:'~8 MB',
+      descZh:'目录与索引（不含量音频）：catalog.json + 4 个索引 + 校验清单',
+      descEn:'Catalogue & indexes only: catalog.json + 4 indexes + checksums' },
+  ];
+}
+
+function render(){
+  const q = ($('q').value || '').trim().toLowerCase();
+  const d = DATA;
+
+  $('lede').innerHTML = t(
+    '按 <b>'+d.dims.length+'</b> 个维度切分的 MIDI 子集包，共 <b>'+fmt(d.packs)+'</b> 个、合计 <b>'+mb(d.bytes)+'</b>，'+
+    '覆盖 midicn-lib 全部 <b>'+fmt(d.total_tracks)+'</b> 首开放许可曲目。每个包含子集 MIDI + 子集 catalog + 许可说明，可单独下载。',
+    '<b>'+fmt(d.packs)+'</b> MIDI subset packs across <b>'+d.dims.length+'</b> dimensions, <b>'+mb(d.bytes)+'</b> in total, '+
+    'covering all <b>'+fmt(d.total_tracks)+'</b> openly-licensed tracks in midicn-lib. Each pack bundles its MIDI files, a subset catalogue and the licence text.'
+  );
+  $('stat').innerHTML = [
+    [fmt(d.packs), t('维度包','packs')],
+    [d.dims.length, t('维度','dimensions')],
+    [fmt(d.total_tracks), t('首曲目','tracks')],
+    [mb(d.bytes), t('合计体积','total size')],
+    [d.version || '—', t('数据版本','data version')],
+  ].map(([b,s])=>'<div><b>'+esc(String(b))+'</b><span>'+s+'</span></div>').join('');
+
+  $('tierNote').innerHTML = t(
+    '<b>许可提示</b>：包内曲目沿用其在主库中的许可档位——<b>C1 可商用</b>（CC BY / CC BY-SA / CC0 / 公有领域）、'+
+    '<b>C2 仅非商用</b>（CC BY-NC-SA，aria / MAESTRO / EMOPIA）、<b>C3 仅研究学习</b>（中国民歌集成 TRADITIONAL-STUDY、Lakh 过滤子集）。'+
+    '每包内均附 <code>LICENSE.md</code> 与子集 <code>catalog.json</code>（逐曲 <code>l</code> / <code>z</code> 字段）。使用前请阅读 '+
+    '<a href="https://lib.midicn.com/licenses.html">许可与法律</a>。',
+    '<b>Licences</b>: tracks keep their tier from the main library — <b>C1 commercial OK</b> (CC BY / CC BY-SA / CC0 / public domain), '+
+    '<b>C2 non-commercial only</b> (CC BY-NC-SA: aria / MAESTRO / EMOPIA), <b>C3 study only</b> (Chinese folk-song anthology, Lakh subset). '+
+    'Every pack ships <code>LICENSE.md</code> and a subset <code>catalog.json</code> (per-track <code>l</code>/<code>z</code>). '+
+    'Please read <a href="https://lib.midicn.com/licenses.html">Licence &amp; legal</a> first.'
+  );
+
+  $('usagePacks').innerHTML = usagePacks().map(usageRowHTML).join('');
+
+  let shown = 0, total = 0;
+  const html = d.dims.map(dim=>{
+    const items = dim.items.filter(p =>
+      !q || (p.key || '').toLowerCase().includes(q) || (p.srcs || []).join(' ').toLowerCase().includes(q));
+    total += dim.items.length;
+    shown += items.length;
+    if(!items.length) return '';
+    return '<details class="dimsec"'+(q || dim.dims_open ? ' open':'')+'>'+
+      '<summary><h2>'+esc(LANG==='zh'?dim.zh:dim.en)+'</h2><span class="spacer"></span>'+
+      '<span class="meta">'+items.length+' / '+dim.packs+t(' 包',' packs')+' · '+mb(dim.bytes)+'</span></summary>'+
+      '<ul class="plist">'+items.map(rowHTML).join('')+'</ul></details>';
+  }).join('');
+
+  $('dims').innerHTML = html || '<p class="meta">'+t('没有匹配的包','No packs match')+'</p>';
+  $('hint').textContent = q
+    ? t('匹配 '+fmt(shown)+' / '+fmt(total)+' 个包', fmt(shown)+' / '+fmt(total)+' packs match')
+    : t('共 '+fmt(total)+' 个包，点击维度标题展开/收起；点包名即下载。',
+        fmt(total)+' packs — click a dimension to expand; click a pack name to download.');
+
+  $('steps').innerHTML = (LANG === 'zh' ? [
+    '要<b>整库</b>？下载上方的 <b>4 个用途包</b>（main / piano-special / study / meta）；注意 C2 仅非商用、C3 仅研究学习。',
+    '只要<b>某个来源 / 某位作曲家 / 某个时期</b>？在下方维度区直接点对应包。',
+    '包内目录为 <code>midicn-lib-'+esc(d.version||'')+'/{分类}/{id}.mid</code>，附 <code>catalog.json</code>（子集）与 <code>LICENSE.md</code>。',
+    '在成果中按主库的署名模板标注本库与上游来源。',
+  ] : [
+    'Want <b>everything</b>? Grab the <b>4 usage packs</b> above (main / piano-special / study / meta) — note C2 is non-commercial and C3 study-only.',
+    'Want only <b>one source / composer / period</b>? Use the dimension packs below.',
+    'Layout inside a pack: <code>midicn-lib-'+esc(d.version||'')+'/{category}/{id}.mid</code>, plus a subset <code>catalog.json</code> and <code>LICENSE.md</code>.',
+    'Credit this library and the upstream source using the attribution template.',
+  ]).map(x=>'<li>'+x+'</li>').join('');
+
+  $('about').innerHTML = t(
+    '<p><b>为什么按维度切包</b>：全库 13 万余首对多数用途过大。维度包让「只要巴洛克长笛」或「只要爱尔兰民谣」这类需求一次下载到位，'+
+    '且每个包自带许可信息，可独立分发。</p>'+
+    '<p><b>与主库的关系</b>：维度包是主库数据的<b>子集切片</b>，不新增也不删改任何曲目；同一首曲目可能出现在多个维度包里（例如既属「巴洛克」又属「Bach」）。'+
+    '包内文件与主库同一份，MD5 一致。</p>'+
+    '<p><b>完整性</b>：本页清单由 <code>packs-manifest.json</code> 生成，含每包的曲目数与体积；若某个包下载失败，请到 '+
+    '<a href="https://github.com/midicn/midi-lib/releases" target="_blank" rel="noopener">Release 页面</a>重试。</p>',
+    '<p><b>Why dimension packs</b>: 130k+ tracks is too much for most uses. Dimension packs let you fetch exactly "Baroque flute" or '+
+    '"Irish folk" in one download, each self-contained with its own licence notice.</p>'+
+    '<p><b>Relationship to the main library</b>: these are <b>subset slices</b> — no track is added, removed or altered. A track may appear '+
+    'in several packs (e.g. both "Baroque" and "Bach"). Files are identical to the main library (same MD5).</p>'+
+    '<p><b>Integrity</b>: this listing is generated from <code>packs-manifest.json</code> with per-pack counts and sizes. If a download fails, '+
+    'retry from the <a href="https://github.com/midicn/midi-lib/releases" target="_blank" rel="noopener">releases page</a>.</p>'
+  );
+
+  $('footNote').innerHTML = t('本页为下载索引，不构成法律意见。','A download index; not legal advice.');
+  $('footLic').innerHTML = t('代码 MIT · 元数据 CC BY 4.0 · 素材依各来源许可',
+                             'Code MIT · metadata CC BY 4.0 · material per source');
+  $('footLegal').innerHTML = t(
+    '数据版本 ' + esc(d.version||'') + ' · 清单生成于 ' + esc(d.generated||''),
+    'Data ' + esc(d.version||'') + ' · manifest generated ' + esc(d.generated||'')
+  );
+}
+
+$('q').oninput = ()=>{ if(DATA) render(); };
+
+async function boot(){
+  try{
+    DATA = await fetchJSON('data/packs.json');
+  }catch(e){
+    $('dims').innerHTML = '<p class="meta">'+t('包索引加载失败，请刷新重试。','Failed to load the pack index; please refresh.')+'</p>';
+    return;
+  }
+  render();
+}
+applyLang();
+boot();
+</script>
+</body>
+</html>
