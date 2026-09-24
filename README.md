@@ -3,8 +3,8 @@
 按 **8 个维度**（来源 / 风格 / 时期 / 乐器 / 授权档位 / 曲式 / 地域 / 作曲家）切分的
 MIDI 子集包下载站。全部数据来自开放许可来源，逐曲标注许可。
 
-- **本仓**：`midicn/zip-site`（GitHub Pages）
-- **数据仓**：`midicn/midi-lib`（Release 分发；`meta/version.json` 与 `meta/packs-manifest.json` 为单源）
+- **本仓**：`midicn/zip`（GitHub Pages）
+- **数据仓**：`midicn/midi-library`（Release 分发；`meta/version.json` 与 `meta/packs-manifest.json` 为单源）
 - **姊妹站**：`lib.midicn.com`（音乐库 + 4 用途包）· `mid.midicn.com`（维度浏览）
 
 ## 目录
@@ -22,7 +22,7 @@ MIDI 子集包下载站。全部数据来自开放许可来源，逐曲标注许
 
 `deploy.yml` 不硬编码版本号，而是：
 
-1. 从 `raw.githubusercontent.com/midicn/midi-lib/main/meta/version.json` 取 `version`；
+1. 从 `raw.githubusercontent.com/midicn/midi-library/main/meta/version.json` 取 `version`；
 2. 从同一目录取 `meta/packs-manifest.json`（由 `midi-lib` 仓 `tools/build_dim_packs.py` 产出）；
 3. 生成 `data/packs.json` 后部署。
 

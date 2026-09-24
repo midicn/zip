@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GITHUB_REPO: midicn/midi-lib
+  GITHUB_REPO: midicn/midi-library
 
 jobs:
   deploy:
@@ -29,7 +29,7 @@ jobs:
       # 版本单源：与 mid 站同一写法，从数据仓 meta/version.json 读取（不硬编码）
       - name: "Resolve release tag (single source: meta/version.json)"
         run: |
-          TAG=$(curl -sL --retry 3 "https://raw.githubusercontent.com/midicn/midi-lib/main/meta/version.json" | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])")
+          TAG=$(curl -sL --retry 3 "https://raw.githubusercontent.com/midicn/midi-library/main/meta/version.json" | python3 -c "import sys,json;print(json.load(sys.stdin)['version'])")
           if [ -z "$TAG" ]; then echo "::error::version.json 未取到版本号"; exit 1; fi
           echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=$TAG"
@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir -p meta
           curl -sL --retry 3 --retry-delay 5 -o meta/packs-manifest.json \
-            "https://raw.githubusercontent.com/midicn/midi-lib/main/meta/packs-manifest.json"
+            "https://raw.githubusercontent.com/midicn/midi-library/main/meta/packs-manifest.json"
           python3 - <<'PY'
           import json, sys
           m = json.load(open('meta/packs-manifest.json', encoding='utf-8'))

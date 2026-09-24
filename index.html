@@ -27,7 +27,7 @@
 <meta name="twitter:image" content="https://zip.midicn.com/assets/og.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070706'/%3E%3Crect x='14' y='26' width='5' height='15' rx='2.5' fill='%23E07A3F' opacity='.55'/%3E%3Crect x='23' y='18' width='5' height='31' rx='2.5' fill='%23E07A3F' opacity='.8'/%3E%3Crect x='32' y='29' width='5' height='12' rx='2.5' fill='%23E8C547'/%3E%3Cpath d='M43 16h5v22l-5 4z' fill='%23E8C547'/%3E%3Cellipse cx='41' cy='41' rx='7.5' ry='5.5' transform='rotate(-18 41 41)' fill='%23E8C547'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="assets/og-icon.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://zip.midicn.com/#website","url":"https://zip.midicn.com/","name":"midicn-lib packs","alternateName":"midicn-lib","inLanguage":"zh-CN","publisher":{"@id":"https://lib.midicn.com/#org"}},{"@type":"Organization","@id":"https://lib.midicn.com/#org","name":"midicn-lib","url":"https://lib.midicn.com/","sameAs":["https://github.com/midicn/midi-lib"]},{"@type":"DataCatalog","name":"midicn-lib 维度包","description":"midicn-lib 维度包下载：4 个用途包（main / piano-special / study / meta）+ 428 个维度包，按来源、风格、时期、乐器、授权档位、曲式、地域、作曲家切分，共 133,667 首开放许可 MIDI。","url":"https://zip.midicn.com/","creator":{"@id":"https://lib.midicn.com/#org"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://zip.midicn.com/#website","url":"https://zip.midicn.com/","name":"midicn-lib packs","alternateName":"midicn-lib","inLanguage":"zh-CN","publisher":{"@id":"https://lib.midicn.com/#org"}},{"@type":"Organization","@id":"https://lib.midicn.com/#org","name":"midicn-lib","url":"https://lib.midicn.com/","sameAs":["https://github.com/midicn/midi-library"]},{"@type":"DataCatalog","name":"midicn-lib 维度包","description":"midicn-lib 维度包下载：4 个用途包（main / piano-special / study / meta）+ 428 个维度包，按来源、风格、时期、乐器、授权档位、曲式、地域、作曲家切分，共 133,667 首开放许可 MIDI。","url":"https://zip.midicn.com/","creator":{"@id":"https://lib.midicn.com/#org"}}]}</script>
 <!-- SEO:END -->
 </head>
 <body>
@@ -89,7 +89,7 @@
       <a href="https://lib.midicn.com/sources.html" data-zh="数据来源" data-en="Sources">数据来源</a>
       <a href="https://lib.midicn.com/lyrics.html" data-zh="歌词检索" data-en="Lyrics">歌词检索</a>
       <a href="https://lib.midicn.com/licenses.html" data-zh="许可与法律" data-en="Licence">许可与法律</a>
-      <a href="https://github.com/midicn/midi-lib" target="_blank" rel="noopener" data-zh="数据仓库" data-en="GitHub">数据仓库</a>
+      <a href="https://github.com/midicn/midi-library" target="_blank" rel="noopener" data-zh="数据仓库" data-en="GitHub">数据仓库</a>
     </nav>
     <span class="flic" id="footLic" data-zh="代码 MIT · 元数据 CC BY 4.0 · 素材依各来源许可" data-en="Code MIT · metadata CC BY 4.0 · material per source">代码 MIT · 元数据 CC BY 4.0 · 素材依各来源许可</span>
   </div>
@@ -143,7 +143,7 @@ setTheme(store.get('midicn-theme', null) || 'dark');
 themeBtn.onclick = ()=> setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 
 function packURL(p){
-  const base = DATA.base_url || ('https://github.com/midicn/midi-lib/releases/download/' + DATA.release_tag + '/');
+  const base = DATA.base_url || ('https://github.com/midicn/midi-library/releases/download/' + DATA.release_tag + '/');
   return base + p.zip;
 }
 
@@ -161,7 +161,7 @@ function rowHTML(p){
 }
 
 function usageURL(zip){
-  const base = 'https://github.com/midicn/midi-lib/releases/download/' + (DATA.version || '') + '/';
+  const base = 'https://github.com/midicn/midi-library/releases/download/' + (DATA.version || '') + '/';
   return base + zip;
 }
 
@@ -261,13 +261,13 @@ function render(){
     '<p><b>与主库的关系</b>：维度包是主库数据的<b>子集切片</b>，不新增也不删改任何曲目；同一首曲目可能出现在多个维度包里（例如既属「巴洛克」又属「Bach」）。'+
     '包内文件与主库同一份，MD5 一致。</p>'+
     '<p><b>完整性</b>：本页清单由 <code>packs-manifest.json</code> 生成，含每包的曲目数与体积；若某个包下载失败，请到 '+
-    '<a href="https://github.com/midicn/midi-lib/releases" target="_blank" rel="noopener">Release 页面</a>重试。</p>',
+    '<a href="https://github.com/midicn/midi-library/releases" target="_blank" rel="noopener">Release 页面</a>重试。</p>',
     '<p><b>Why dimension packs</b>: 130k+ tracks is too much for most uses. Dimension packs let you fetch exactly "Baroque flute" or '+
     '"Irish folk" in one download, each self-contained with its own licence notice.</p>'+
     '<p><b>Relationship to the main library</b>: these are <b>subset slices</b> — no track is added, removed or altered. A track may appear '+
     'in several packs (e.g. both "Baroque" and "Bach"). Files are identical to the main library (same MD5).</p>'+
     '<p><b>Integrity</b>: this listing is generated from <code>packs-manifest.json</code> with per-pack counts and sizes. If a download fails, '+
-    'retry from the <a href="https://github.com/midicn/midi-lib/releases" target="_blank" rel="noopener">releases page</a>.</p>'
+    'retry from the <a href="https://github.com/midicn/midi-library/releases" target="_blank" rel="noopener">releases page</a>.</p>'
   );
 
   $('footNote').innerHTML = t('本页为下载索引，不构成法律意见。','A download index; not legal advice.');
