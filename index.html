@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh" data-site="zip">
+<html lang="zh" data-site="zip" data-design="v6">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>midicn-lib 维度包下载 · 428 个包 / 8 个维度</title>
 <meta name="description" content="midicn-lib 维度包下载：4 个用途包（main / piano-special / study / meta）+ 428 个维度包，按来源、风格、时期、乐器、授权档位、曲式、地域、作曲家切分，共 133,667 首开放许可 MIDI。">
-<link rel="stylesheet" href="assets/core/midicn.bdf51406ff.css">
+<link rel="stylesheet" href="assets/core/midicn.67b49e760b.css">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="stylesheet" href="assets/site.css">
 <!-- SEO:BEGIN -->
@@ -30,6 +30,11 @@
 <link rel="apple-touch-icon" href="assets/og-icon.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://zip.midicn.com/#website","url":"https://zip.midicn.com/","name":"midicn-lib packs","alternateName":"midicn-lib","inLanguage":"zh-CN","publisher":{"@id":"https://lib.midicn.com/#org"}},{"@type":"Organization","@id":"https://lib.midicn.com/#org","name":"midicn-lib","url":"https://lib.midicn.com/","sameAs":["https://github.com/midicn/midi-library"]},{"@type":"DataCatalog","name":"midicn-lib 维度包","description":"midicn-lib 维度包下载：4 个用途包（main / piano-special / study / meta）+ 428 个维度包，按来源、风格、时期、乐器、授权档位、曲式、地域、作曲家切分，共 133,667 首开放许可 MIDI。","url":"https://zip.midicn.com/","creator":{"@id":"https://lib.midicn.com/#org"}}]}</script>
 <!-- SEO:END -->
+<link rel="stylesheet" href="assets/core/v6-data.32a62fe518.css">
+<!--v6-font-->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/p.0d0d25cdf1.woff2" crossorigin>
+<style>@font-face{font-family:"Smiley Sans";src:url("assets/fonts/p.0d0d25cdf1.woff2") format("woff2");font-display:swap}</style>
+<!--/v6-font-->
 </head>
 <body>
 
@@ -135,8 +140,9 @@ $('lang').onclick = ()=>{ LANG = LANG === 'zh' ? 'en' : 'zh'; store.set('midicn-
 
 const themeBtn = $('theme');
 function setTheme(v){ document.documentElement.dataset.theme = v; store.set('midicn-theme', v); }
-setTheme(store.get('midicn-theme', null) || 'dark');
-themeBtn.onclick = ()=> setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+var savedTheme = store.get('midicn-theme', null);
+if (savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme);
+themeBtn.onclick = ()=> setTheme((document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark' ? 'light' : 'dark');
 
 function packURL(p){
   const base = DATA.base_url || ('https://github.com/midicn/midi-library/releases/download/' + DATA.release_tag + '/');
@@ -289,6 +295,6 @@ async function boot(){
 applyLang();
 boot();
 </script>
-<script src="assets/core/shell.67a944dda2.js"></script>
+<script src="assets/core/shell.83698018a9.js"></script>
 </body>
 </html>
