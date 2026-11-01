@@ -70,6 +70,11 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
+      - name: Drop repo-only docs from the published tree
+        # 与 mid 站同一处问题：`path: .` 把仓库 README.md 发成了网页，
+        # /README.md 因此是一个没有导航与 canonical 的重复页。仓库里那篇不动。
+        run: rm -f README.md DATA-STRUCTURE.md
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
