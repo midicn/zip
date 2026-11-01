@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /detail.html
-
 Sitemap: https://zip.midicn.com/sitemap.xml
